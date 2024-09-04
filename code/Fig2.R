@@ -9,8 +9,10 @@
 
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ## Load data & Packages
-Data <- read.csv('data/Data frame phil trans 08052024.csv')
+Data <- read.csv('data/data.csv')
 library(dplyr)
+library(ggplot2)
+library(sjPlot)
 
 ##########################################################
 ## -------------------------------------------------------
@@ -30,10 +32,10 @@ SubData2$ZNcollars <- as.vector(SubData2$Ncollars)
 
 ## Social Opportunities LMM ##
 ## Actual model:
-socopp <- lmerTest::lmer(socopp ~ RT + ZRank + ZDaylength + Repstate + Ncollars + (1 + RT|BaboonID) + (1|Date), data = SubData2, REML = FALSE) 
+socopp <- lmerTest::lmer(socopp ~ RT + ZRank + ZDaylength + Repstate + Ncollars + (1 + RT|BaboonID) + (1 | Date), data = SubData2, REML = FALSE) 
 
 socoppRT <- plot_model(socopp, type = "eff", terms = c("RT"), title = "", colors = "#8DCA6B", show.data = TRUE)
-tp <- ggpredict(socopp, terms = "RT")
+tp <- ggeffects::ggpredict(socopp, terms = "RT")
 
 tpall <- SubData2
 tpall$type <- 'real'
@@ -67,19 +69,11 @@ p2 <- ggplot(tpall[tpall$type == 'real' & tpall$trans == 'RT',],
         color = ''
   )+ 
   theme(panel.grid = element_blank(),
-        legend.position = c(0.7, 0.95),
-        legend.direction = 'horizontal',
-        ggside.panel.scale = 0.2,
-        legend.margin=margin(2,2,2,2),
-        legend.box.margin=margin(0, 0, 0,0),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        legend.title = ggplot2::element_text( size = 12, family = 'Times New Roman'),
-        legend.text = ggplot2::element_text( size = 10, family = 'Times New Roman'))
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'))
 p2
 
-ggsave(p2, filename = 'media/Fig2.png',
-       width = 4.4, height = 4)
+ggsave(p2, filename = 'media/Fig2.png', width = 4.4, height = 4)
 
 ####################################
 ## -- The end

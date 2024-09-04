@@ -9,13 +9,15 @@
 
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ## Load data & Packages
-Data <- read.csv('data/Data frame phil trans 08052024.csv')
+Data <- read.csv('data/data.csv')
 library(dplyr)
+library(ggplot2)
+library(sjPlot)
 
 ##########################################################
 ## -------------------------------------------------------
 ## Does energetic condition (fT3) predict movement (Distance,RT,Sinuosity,SL); males and females ##
-SubData1 <- subset(Data, !is.na(fT3)&!is.na(RT))
+SubData1 <- subset(Data, !is.na(fT3) & !is.na(RT))
 
 SubData1 <- SubData1 %>% 
   group_by(BaboonID) %>% 
@@ -30,7 +32,6 @@ SubData1$logSin<-log(SubData1$Sinuosity)
 SubData1$logSL<-log(SubData1$SL)
 SubData1$ZfT3_E <- as.vector(scale(SubData1$fT3_E))
 SubData1$ZfT3_M <- as.vector(scale(SubData1$fT3_M))
-SubData1$ZfT3 <- as.vector(scale(SubData1$fT3))
 
 ## Residence time LMM ##
 ## Actual model:
@@ -71,17 +72,17 @@ p1A <- RT  +
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         plot.tag.position = c(0.01,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_text(color = 'black', margin = margin(r = 10),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title.y = element_text(color = 'black', margin = margin(r = 10),
                                              size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman') )
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman') )
   
 
 # -----------------
 p1B <- ggplot(data = SubData1, aes(fT3_M, logRT)) + 
   stat_summary(fun = mean, geom = 'point', aes(fill = fT3_M), size = 1.5, shape = 21) +
-  geom_smooth(method=lm, col = 'darkgreen', fill = 'palegreen4', size = 0.5, se = T) +
+  geom_smooth(method=lm, col = 'darkgreen', fill = 'palegreen4', linewidth = 0.5, se = T) +
   theme_bw()+
   ylim(c(0,3.5))+ # same as Fig1A
   scale_x_continuous(breaks = c(35,40, 45, 50, 55))+
@@ -94,11 +95,11 @@ p1B <- ggplot(data = SubData1, aes(fT3_M, logRT)) +
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         plot.tag.position = c(0.01,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_text(color = 'white', margin = margin(r = 10),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title.y = element_text(color = 'white', margin = margin(r = 10),
                                              size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'))
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'))
 
 
 P1 <- cowplot::plot_grid(p1A, p1B, labels = NA)
@@ -147,16 +148,16 @@ sp1 <- DT  +
   labs(y = expression("Distance (m)"),
        x = expression("Deviation from"~bar(fT3[i])~ "(ng/g)"),
        tag = "A") +
-  scale_x_continuous(limits = c(-30,50), breaks = c(-20, 0, 20, 40))+ 
+  scale_x_continuous(breaks = c(-40, -20, 0, 20, 40, 60, 80))+ 
   theme(legend.position = 'none', 
         plot.title = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         plot.tag.position = c(0.02,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title.y = element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
   )
 
 
@@ -178,10 +179,10 @@ sp1B <- ggplot(data=SubData1, aes(fT3_M, Distance))+
                                        color = "transparent"),
         panel.grid.major = element_blank(),
         plot.tag.position = c(-0.12,0.94),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_blank(),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        axis.title.y = element_blank(),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
         )
 
 ##------------
@@ -199,16 +200,16 @@ sp2 <- SL  +
        tag = "C",
        fill = expression(bar(fT3[i]))
   )+
-  scale_x_continuous(limits = c(-30,50), breaks = c(-20, 0, 20, 40))+ 
+  scale_x_continuous(breaks = c( -20, 0, 20, 40, 60, 80))+ 
   theme(legend.position = 'none', #c(0.8,0.8),
         plot.title = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         plot.tag.position = c(0.02,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title.y = element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
   )
 
 sp2B <- ggplot(data=SubData1, aes(fT3_M, logSL))+ 
@@ -222,20 +223,21 @@ sp2B <- ggplot(data=SubData1, aes(fT3_M, logSL))+
   theme(legend.position = 'none',
         plot.title = element_blank(),
         panel.grid.minor = element_blank(),
-        rect = element_rect(fill = "transparent", color = "transparent"),
+        rect = element_rect(fill = "transparent", 
+                            color = "transparent"),
         panel.background = element_rect(fill = "transparent", 
                                         color = "transparent"),
         plot.background = element_rect(fill = "transparent", 
                                        color = "transparent"),
         panel.grid.major = element_blank(),
         plot.tag.position = c(-0.12,0.94),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_blank(),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        #axis.text.y = ggplot2::element_blank(),
-        legend.title = ggplot2::element_text( size = 12, family = 'Times New Roman'),
-        legend.text = ggplot2::element_text( size = 12, family = 'Times New Roman'))
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        axis.title.y = element_blank(),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        #axis.text.y = element_blank(),
+        legend.title = element_text( size = 12, family = 'Times New Roman'),
+        legend.text = element_text( size = 12, family = 'Times New Roman'))
 
 sp2B
 
@@ -258,16 +260,16 @@ sp3 <- Sin  +
        x = expression("Deviation from"~bar(fT3[i])~ "(ng/g)"),
        tag = "E"
        )+
-  scale_x_continuous(limits = c(-30,50), breaks = c(-20, 0, 20, 40))+ 
+  scale_x_continuous(breaks = c(-20, 0, 20, 40, 60, 80))+ 
   theme(legend.position = 'none', 
         plot.title = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         plot.tag.position = c(0.02,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title.y = element_text(color = 'black', hjust = 0.5, size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
   )
 
 sp3
@@ -282,33 +284,34 @@ sp3B <- ggplot(data = SubData1, aes(fT3_M, logSin))+
   theme(legend.position = 'none',
         plot.title = element_blank(),
         panel.grid.minor = element_blank(),
-        rect = element_rect(fill = "transparent", color = "transparent"),
+        rect = element_rect(fill = "transparent", 
+                            color = "transparent"),
         panel.background = element_rect(fill = "transparent", 
                                         color = "transparent"),
         plot.background = element_rect(fill = "transparent", 
                                        color = "transparent"),
         panel.grid.major = element_blank(),
         plot.tag.position = c(-0.25,0.94),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        axis.title.y = ggplot2::element_blank(),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman')
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        axis.title.y = element_blank(),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman')
         )
 
 # Add inserts
-Supf1 <- grid.arrange(sp1)
-Supf2 <- grid.arrange(sp2)
-Supf3 <- grid.arrange(sp3)
+Supf1 <- gridExtra::grid.arrange(sp1)
+Supf2 <- gridExtra::grid.arrange(sp2)
+Supf3 <- gridExtra::grid.arrange(sp3)
 
-sp1f <- ggdraw(Supf1) +
-  draw_plot(sp1B, x = .685, y = .61, width = 0.30, height = 0.375)
-sp2f <- ggdraw(Supf2) +
-  draw_plot(sp2B, x = .685, y = .61, width = 0.30, height = 0.375)
-sp3f <- ggdraw(Supf3) +
-  draw_plot(sp3B, x = .685, y = .61, width = 0.30, height = 0.375)
+sp1f <- cowplot::ggdraw(Supf1) +
+  cowplot::draw_plot(sp1B, x = .685, y = .61, width = 0.30, height = 0.375)
+sp2f <- cowplot::ggdraw(Supf2) +
+  cowplot::draw_plot(sp2B, x = .685, y = .61, width = 0.30, height = 0.375)
+sp3f <- cowplot::ggdraw(Supf3) +
+  cowplot::draw_plot(sp3B, x = .685, y = .61, width = 0.30, height = 0.375)
 
 ## Full figure:
-SF1 <- grid.arrange(sp1f,sp2f, sp3f, nrow = 1)
+SF1 <- gridExtra::grid.arrange(sp1f,sp2f, sp3f, nrow = 1)
 ggsave(SF1, filename = 'media/FigS1.png',
        width = 13, height = 4)
 
@@ -321,10 +324,10 @@ thetheme <- theme(legend.position = 'none',
                   panel.grid.minor = element_blank(),
                   panel.grid.major = element_blank(),
                   plot.tag.position = c(0.01,0.98),
-                  plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-                  axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-                  axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-                  axis.title.y = ggplot2::element_text(color = 'black', margin = margin(r = 10),
+                  plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+                  axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+                  axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+                  axis.title.y = element_text(color = 'black', margin = margin(r = 10),
                                                        size = 14, family = 'Times New Roman'),
                  )
 

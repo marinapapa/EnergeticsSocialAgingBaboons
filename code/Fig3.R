@@ -9,7 +9,7 @@
 
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ## Load data & Packages
-Data <- read.csv('data/Data frame phil trans 08052024.csv')
+Data <- read.csv('data/data.csv')
 library(dplyr)
 
 ##########################################################
@@ -31,14 +31,14 @@ RG <- lmerTest::lmer (sqrtRG ~ Zsocopp + ZRank + ZDaylength + Repstate + (1 + Zs
 ## Untransformed for plot
 RG <- lmerTest::lmer (sqrtRG ~ socopp + ZRank + ZDaylength + Repstate + (1 + socopp|BaboonID) + (1|Date), data = SubData3) 
 
-tp <- ggpredict(RG, terms = "socopp")
+tp <- ggeffects::ggpredict(RG, terms = "socopp")
 tpall <- SubData3
 tpall$type <- 'read'
 tp$type <- 'fake'
 tpall <- bind_rows(tpall, tp)
 
-img_gr <- readPNG("media/receive_icon.png")
-img_gr <- rasterGrob(img_gr, interpolate=TRUE)
+img_gr <- png::readPNG("media/receive_icon.png")
+img_gr <- grid::rasterGrob(img_gr, interpolate=TRUE)
 
 p3A <- ggplot(tpall, aes(x = socopp, y = sqrtRG))+
   geom_point(fill = "#5c5992", shape = 21, size = 2, alpha = 0.8)+
@@ -60,11 +60,9 @@ p3A <- ggplot(tpall, aes(x = socopp, y = sqrtRG))+
   )+
   theme(panel.grid = element_blank(),
         plot.tag.position = c(0.01,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        legend.title = ggplot2::element_text( size = 12, family = 'Times New Roman'),
-        legend.text = ggplot2::element_text( size = 10, family = 'Times New Roman'),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman')
   )
 
 ## Grooming given ##
@@ -86,10 +84,10 @@ GG <- lmerTest::lmer (sqrtGG ~ Zsocopp * ZfT3 + ZRank + ZDaylength + Repstate + 
 ## Untransformed for plot
 GG <- lmerTest::lmer(sqrtGG ~ socopp * fT3 + ZRank + ZDaylength + Repstate + (1|BaboonID) + (1|Date), data = SubData4)
 
-img_gg <- readPNG("media/give_icon.png")
-img_gg <- rasterGrob(img_gg, interpolate=TRUE)
+img_gg <- png::readPNG("media/give_icon.png")
+img_gg <- grid::rasterGrob(img_gg, interpolate=TRUE)
 
-intPlot <- interact_plot(model = GG, 
+intPlot <- interactions::interact_plot(model = GG, 
                          pred = socopp, 
                          modx = fT3, 
                          legend_title = "", 
@@ -116,30 +114,30 @@ p3B <- intPlot  +
        x = "Daily social opportunities (N)",
        tag="B",
        linetype = 'fT3:',
-       color = 'fT3:',
+       color = 'fT3:'
   )+
   xlim(c(0,760))+
   ylim(c(3,17.5))+
   annotation_custom(img_gg, xmin = 540, xmax = 760, ymin = 2.5, ymax = 7) +
-  theme(legend.position = c(0.86,0.8875),
+  theme(legend.position = c(0.86, 0.8875),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_blank(),
         legend.key.width = unit(1, 'cm'),
-        plot.tag.position = c(0.01,0.98),
-        plot.tag = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        plot.tag.position = c(0.01, 0.98),
+        plot.tag = element_text(color = 'black', size = 14, family = 'Times New Roman'),
         legend.key.height = unit(0.05, 'cm'),
-        legend.margin=margin(2,2,2,2),
-        legend.box.margin=margin(0, 0, 0,0),
-        axis.title = ggplot2::element_text(color = 'black', size = 14, family = 'Times New Roman'),
-        axis.text = ggplot2::element_text(color = 'black', size = 10, family = 'Times New Roman'),
-        legend.title = ggplot2::element_text( size = 12, family = 'Times New Roman'),
-        legend.text = ggplot2::element_text( size = 12, family = 'Times New Roman'))
+        legend.margin = margin(2, 2, 2, 2),
+        legend.box.margin = margin(0, 0, 0,0),
+        axis.title = element_text(color = 'black', size = 14, family = 'Times New Roman'),
+        axis.text = element_text(color = 'black', size = 10, family = 'Times New Roman'),
+        legend.title = element_text( size = 12, family = 'Times New Roman'),
+        legend.text = element_text( size = 12, family = 'Times New Roman'),
+        legend.background = element_rect(fill = 'transparent', color = 'transparent'))
 
 
 ## Combine to final figure ##
-p3 <- grid.arrange(p3A, p3B, nrow=1)
-ggsave(p3, filename = 'media/Fig3.png',
-       width = 9, height = 4)
+p3 <- gridExtra::grid.arrange(p3A, p3B, nrow=1)
+ggsave(p3, filename = 'media/Fig3.png', width = 9, height = 4)
 
 ####################################
 ## -- The end
