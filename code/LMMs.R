@@ -94,6 +94,14 @@ SubData4$sqrtGG <- sqrt(GGmin)
 GG <- lmerTest::lmer (sqrtGG ~ Zsocopp * ZfT3 + ZRank + ZDaylength + Repstate + (1 | BaboonID) + (1 | Date), data = SubData4)
 summary(GG)
 
+## Supplementary analysis ##
+## LMMS1 ##
+SubData1$ZlogSin <- as.vector(scale(log(SubData1$Sinuosity)))
+SubData1$ZlogSL <- as.vector(scale(log(SubData1$SL)))
+LMMS1 <- lmerTest::lmer(logRT ~ ZlogSin + ZlogSL + Repstate + (1 + ZlogSin | BaboonID) + (1 + ZlogSL | BaboonID) + (1 | Date), data = SubData1, REML = FALSE)
+summary(LMMS1)
+
+
 ####################################
 ## -- The end
 

@@ -19,7 +19,7 @@ All analysis was performed in _R_, version 4.2. Files:
 - *Fig1.R*: reproduces Figure 1 and Supplementary Figures S1 and S2. 
 - *Fig2.R*: reproduces Figure 2.
 - *Fig3.R*: reproduces Figure 3.
-- *LMMs.R*: performs the statistical analysis of the paper, fits and checks the linear-mixed models, using the package _lmerTest_. 
+- *LMMs.R*: performs the statistical analysis of the paper (linear-mixed models) using the package _lmerTest_. 
 
 Package dependencies:
 _dplyr, lmerTest, sjPlot, interactions, tidyr, ggplot2, ggeffects, cowplot, wesanderson, png, grid, gridExtra, (extrafont)._
