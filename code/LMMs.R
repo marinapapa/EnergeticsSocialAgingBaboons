@@ -5,9 +5,8 @@
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 ## Load data & Packages
-Data <- read.csv('data/data.csv')
+Data <- read.csv('../data/data.csv')
 library(dplyr)
-#library(lmerTest)
 
 ##\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ## 1. Does energetic condition (fT3) predict movement (Distance,RT,Sinuosity,SL); males and females ##
@@ -78,7 +77,7 @@ SubData3$sqrtRG <- sqrt(RGmin)
 RG <- lmerTest::lmer(sqrtRG ~ Zsocopp + ZRank + ZDaylength + Repstate + (1 + Zsocopp | BaboonID) + (1 | Date), data = SubData3) 
 summary(RG)
 
-## Include interaction between social opportunities and fT3 ##
+## LMM7 - Grooming given ##
 SubData4 <- subset(Data, Sex == "F" & !is.na(socopp) & !is.na(fT3))
 
 ## Transformations ##
@@ -88,8 +87,6 @@ SubData4$ZDaylength <- as.vector(scale(SubData4$Daylength))
 SubData4$ZRank <- as.vector(scale(SubData4$Rank))
 SubData4$ZfT3 <- as.vector(scale(SubData4$fT3))
 SubData4$sqrtGG <- sqrt(GGmin)
-
-## LMM7 - Grooming given ##
 
 GG <- lmerTest::lmer (sqrtGG ~ Zsocopp * ZfT3 + ZRank + ZDaylength + Repstate + (1 | BaboonID) + (1 | Date), data = SubData4)
 summary(GG)
@@ -101,7 +98,5 @@ SubData1$ZlogSL <- as.vector(scale(log(SubData1$SL)))
 LMMS1 <- lmerTest::lmer(logRT ~ ZlogSin + ZlogSL + Repstate + (1 + ZlogSin | BaboonID) + (1 + ZlogSL | BaboonID) + (1 | Date), data = SubData1, REML = FALSE)
 summary(LMMS1)
 
-
 ####################################
 ## -- The end
-
