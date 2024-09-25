@@ -64,6 +64,8 @@ summary(socopp)
 
 ##########################################################
 ##3.Do social opportunities predict grooming?##
+
+## LMM6 - Grooming received  ##
 SubData3 <- subset(Data, Sex == "F" & !is.na(socopp))
 
 ## Transformations ##
@@ -73,7 +75,6 @@ SubData3$ZDaylength <- as.vector(scale(SubData3$Daylength))
 SubData3$ZRank <- as.vector(scale(SubData3$Rank))
 SubData3$sqrtRG <- sqrt(RGmin)
 
-## LMM6 - Grooming received  ##
 RG <- lmerTest::lmer(sqrtRG ~ Zsocopp + ZRank + ZDaylength + Repstate + (1 + Zsocopp | BaboonID) + (1 | Date), data = SubData3) 
 summary(RG)
 
